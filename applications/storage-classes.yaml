@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: storageclasses
+  namespace: argocd # Or the namespace where your Argo CD instance is running
+spec:
+  project: default # The Argo CD project the application belongs to
+  source:
+    repoURL: https://github.com/Maheswari-Sanivarapu/eks-argocd.git # URL of the Git repository
+    targetRevision: main # The branch, tag, or commit hash to sync from
+    path: storageclasses # Path within the repository to the Kubernetes manifests
+  destination:
+    server: https://kubernetes.default.svc # The API server URL of the target cluster
+    namespace: argocd # The namespace in the target cluster where resources will be deployed
+  syncPolicy:
+    automated:
+      prune: true # Automatically delete resources that are no longer in Git
+      selfHeal: true # Automatically sync applications back to their desired state if they drift
+    syncOptions:
+      - CreateNamespace=true # Create the destination namespace if it doesn't exist
